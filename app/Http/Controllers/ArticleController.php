@@ -16,20 +16,13 @@ class ArticleController extends Controller
      */
     public function index()
     {
+        // Get articles
         $articles = Article::orderBy('created_at', 'desc')->paginate(5);
+
         // Return collection of articles as a resource
         return ArticleResource::collection($articles);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -39,16 +32,16 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        $article = $request->isMethod('put') ? Article::findOrFail
-        ($request->article_id) : new Article;
+        $article = $request->isMethod('put') ? Article::findOrFail($request->article_id) : new Article;
 
-        $article->id = $request->input('article-id');
+        $article->id = $request->input('article_id');
         $article->title = $request->input('title');
         $article->body = $request->input('body');
 
         if($article->save()) {
             return new ArticleResource($article);
         }
+
     }
 
     /**
@@ -59,12 +52,11 @@ class ArticleController extends Controller
      */
     public function show($id)
     {
-        // Get an article
+        // Get article
         $article = Article::findOrFail($id);
 
         // Return single article as a resource
         return new ArticleResource($article);
-
     }
 
     /**
@@ -75,15 +67,11 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
-        // Get an article
+        // Get article
         $article = Article::findOrFail($id);
 
-        if($article->dellete()) {
+        if($article->delete()) {
             return new ArticleResource($article);
         }
-
-        // Return single article as a resource
-        return new ArticleResource($article);
-        //
     }
 }
